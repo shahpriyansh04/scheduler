@@ -29,19 +29,49 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useEffect, useState } from "react";
-import { Doc } from "../../convex/_generated/dataModel";
+import { Doc, Id } from "../../convex/_generated/dataModel";
 import { client } from "@/lib/client";
 
 export default function ClassAddDrawer() {
   const faculty = useQuery(api.faculty.getFaculty, {});
+  const createEvent = useMutation(api.event.createEvent);
+
   const [start, setStart] = useState("08:00");
   const [end, setEnd] = useState("09:00");
-  const [day, setDay] = useState("monday");
+  const [day, setDay] = useState("1");
   const [type, setType] = useState("cr");
   const [classrooms, setClassrooms] = useState<Doc<"classrooms">[]>();
+  const [selectedClassroom, setSelectedClassroom] =
+    useState<Id<"classrooms">>();
+  const [name, setName] = useState<string>("");
+  const [facultyId, setFacultyId] = useState<Id<"faculty">>();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const handleSubmit = async () => {
+    const id = await createEvent({
+      classroom: selectedClassroom as Id<"classrooms">,
+      day,
+      end,
+      faculty: facultyId as Id<"faculty">,
+      name,
+      start,
+      type,
+    });
+    setName("");
+    setDay("1");
+    setStart("08:00");
+    setEnd("09:00");
+    setType("cr");
+    setSelectedClassroom(undefined);
+    setFacultyId(undefined);
+    setClassrooms(undefined);
+
+    setIsDrawerOpen(false);
+  };
+
   const getClassrooms = async () => {
     const classrooms = await client.query(
       api.classroom.getAvailableClassrooms,
@@ -53,7 +83,6 @@ export default function ClassAddDrawer() {
       }
     );
     setClassrooms(classrooms);
-    console.log(classrooms);
   };
 
   useEffect(() => {
@@ -61,8 +90,12 @@ export default function ClassAddDrawer() {
   }, [day, start, end, type]);
 
   return (
-    <Drawer direction="right" modal>
-      <DrawerTrigger>
+    <Drawer
+      direction="right"
+      open={isDrawerOpen}
+      onClose={() => setIsDrawerOpen(false)}
+    >
+      <DrawerTrigger onClick={() => setIsDrawerOpen(true)}>
         <Button>Add Class</Button>
       </DrawerTrigger>
       <DrawerContent className="h-screen top-0 right-0 left-auto mt-0 w-[500px] rounded-none">
@@ -77,11 +110,19 @@ export default function ClassAddDrawer() {
             <form className="grid gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="name">Name</Label>
-                <Input id="name" placeholder="Enter class name" />
+                <Input
+                  id="name"
+                  placeholder="Enter class name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="faculty">Faculty</Label>
-                <Select>
+                <Select
+                  value={facultyId}
+                  onValueChange={(value: Id<"faculty">) => setFacultyId(value)}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select faculty" />
                   </SelectTrigger>
@@ -102,12 +143,12 @@ export default function ClassAddDrawer() {
                       <SelectValue placeholder="Select day" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="monday">Monday</SelectItem>
-                      <SelectItem value="tuesday">Tuesday</SelectItem>
-                      <SelectItem value="wednesday">Wednesday</SelectItem>
-                      <SelectItem value="thursday">Thursday</SelectItem>
-                      <SelectItem value="friday">Friday</SelectItem>
-                      <SelectItem value="saturday">Saturday</SelectItem>
+                      <SelectItem value="1">Monday</SelectItem>
+                      <SelectItem value="2">Tuesday</SelectItem>
+                      <SelectItem value="3">Wednesday</SelectItem>
+                      <SelectItem value="4">Thursday</SelectItem>
+                      <SelectItem value="5">Friday</SelectItem>
+                      <SelectItem value="6">Saturday</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -152,13 +193,20 @@ export default function ClassAddDrawer() {
               <div className="grid gap-2">
                 <Label htmlFor="classroom">Classroom</Label>
                 {classrooms ? (
-                  <Select>
+                  <Select
+                    value={selectedClassroom}
+                    onValueChange={(value: Id<"classrooms">) =>
+                      setSelectedClassroom(value)
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select classroom" />
                     </SelectTrigger>
                     <SelectContent>
                       {classrooms.map((c) => (
-                        <SelectItem value={c._id}>{c.name}</SelectItem>
+                        <SelectItem value={c._id} key={c._id}>
+                          {c.name}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -176,8 +224,8 @@ export default function ClassAddDrawer() {
             </form>
           </CardContent>
           <DrawerFooter>
-            <Button>Submit</Button>
-            <DrawerClose>
+            <Button onClick={handleSubmit}>Submit</Button>
+            <DrawerClose onClick={() => setIsDrawerOpen(false)}>
               <Button variant="outline">Cancel</Button>
             </DrawerClose>
           </DrawerFooter>

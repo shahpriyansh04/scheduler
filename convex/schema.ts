@@ -16,5 +16,6 @@ export default defineSchema({
     classroom: v.id("classrooms"),
     start: v.string(),
     end: v.string(),
+    type: v.string(),
   }),
 });

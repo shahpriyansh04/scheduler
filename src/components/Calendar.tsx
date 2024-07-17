@@ -15,7 +15,6 @@ export default function CalendarView({ events }: any) {
 
   const handleDateChange = (date: Date) => setCurrentDate(date);
   const handleViewChange = (view: string[]) => {
-    console.log(view);
     setCurrentView(view);
   };
   const eventStyleGetter = () => {
@@ -44,20 +43,84 @@ export default function CalendarView({ events }: any) {
       </div>
     );
   };
+  function getOccurrence(day: string, start: string, end: string) {
+    // Convert day to an integer (1-7, where 1 is Monday)
+    const dayInt = parseInt(day);
+
+    // Get the current date and time
+    const now = new Date();
+
+    const currentDay = now.getDay() === 0 ? 7 : now.getDay();
+
+    let daysUntilNext = (dayInt - currentDay + 7) % 7;
+
+    let occurrenceDate = new Date(now);
+
+    if (daysUntilNext === 0) {
+      if (occurrenceDate < now) {
+        occurrenceDate.setDate(now.getDate() - 7);
+      } else {
+        occurrenceDate.setDate(now.getDate());
+      }
+    } else if (
+      daysUntilNext < 0 ||
+      (daysUntilNext > 0 && daysUntilNext < 7 - currentDay)
+    ) {
+      occurrenceDate.setDate(now.getDate() + daysUntilNext);
+    } else {
+      occurrenceDate.setDate(now.getDate() + daysUntilNext - 7);
+    }
+
+    const year = occurrenceDate.getFullYear();
+    const month = occurrenceDate.getMonth();
+    const date = occurrenceDate.getDate();
+
+    const [startHours, startMinutes] = start.split(":").map(Number);
+    const startDate = new Date(
+      year,
+      month,
+      date,
+      startHours,
+      startMinutes,
+      0,
+      0
+    );
+
+    const [endHours, endMinutes] = end.split(":").map(Number);
+    const endDate = new Date(year, month, date, endHours, endMinutes, 0, 0);
+
+    return {
+      startDate,
+      endDate,
+    };
+  }
+
+  const formattedEvents = events.map((event: any) => {
+    const { startDate, endDate } = getOccurrence(
+      event.day,
+      event.start,
+      event.end
+    );
+    event.title = event.name;
+    return { ...event, startDate, endDate };
+  });
+
   return (
     <Calendar
       date={currentDate}
       defaultDate={new Date()}
       defaultView="week"
+      startAccessor="startDate"
+      endAccessor="endDate"
       localizer={localizer}
       onNavigate={handleDateChange}
-      events={events}
+      events={formattedEvents}
       showMultiDayTimes
       onView={handleViewChange}
       step={30}
       views={views}
       view={currentView}
-      onSelectEvent={(event: any) => console.log(event)}
+      onSelectEvent={(event: any) => {}}
       eventPropGetter={eventStyleGetter}
       style={{ height: 800 }}
       formats={{
