@@ -6,10 +6,10 @@ import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Button } from "@/components/ui/button";
 
-export default function CalendarView({ events }: any) {
+export default function CalendarView({ events, defaultView }: any) {
   const localizer = momentLocalizer(moment);
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [currentView, setCurrentView] = useState(Views.WEEK);
+  const [currentView, setCurrentView] = useState(Views[defaultView]);
 
   const views = ["week", "day"];
 
@@ -101,7 +101,7 @@ export default function CalendarView({ events }: any) {
       event.start,
       event.end
     );
-    event.title = event.name;
+    event.title = event.name + ` ${event.type}` + ` ${event.classroomName}`;
     return { ...event, startDate, endDate };
   });
 
@@ -109,7 +109,7 @@ export default function CalendarView({ events }: any) {
     <Calendar
       date={currentDate}
       defaultDate={new Date()}
-      defaultView="week"
+      defaultView={defaultView}
       startAccessor="startDate"
       endAccessor="endDate"
       localizer={localizer}

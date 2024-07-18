@@ -20,7 +20,7 @@ export default async function PageComponent() {
           <FacultyModal />
           <ClassroomModal />
         </div>
-        <CalendarView events={events} />
+        <CalendarView events={events} defaultView="day" />
       </div>
     </main>
   );

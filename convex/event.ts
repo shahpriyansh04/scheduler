@@ -29,6 +29,18 @@ export const getEvents = query({
   args: {},
   async handler(ctx, args) {
     const events = await ctx.db.query("event").collect();
-    return events;
+    const updatedEvents = await Promise.all(
+      events.map(async (event) => {
+        const classroom = await ctx.db
+          .query("classrooms")
+          .filter((q) => q.eq(q.field("_id"), event.classroom))
+          .collect();
+        return {
+          ...event,
+          classroomName: classroom[0].name, // Add classroom name to each event
+        };
+      })
+    );
+    return updatedEvents;
   },
 });

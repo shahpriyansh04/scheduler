@@ -34,6 +34,7 @@ import { api } from "../../convex/_generated/api";
 import { useEffect, useState } from "react";
 import { Doc, Id } from "../../convex/_generated/dataModel";
 import { client } from "@/lib/client";
+import revalidate from "@/lib/revalidate-path";
 
 export default function ClassAddDrawer() {
   const faculty = useQuery(api.faculty.getFaculty, {});
@@ -60,6 +61,7 @@ export default function ClassAddDrawer() {
       start,
       type,
     });
+    revalidate("/");
     setName("");
     setDay("1");
     setStart("08:00");
