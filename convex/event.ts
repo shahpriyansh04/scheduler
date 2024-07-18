@@ -25,22 +25,44 @@ export const createEvent = mutation({
   },
 });
 
+async function addClassroomNamesToEvents(
+  events: any[],
+  ctx: any
+): Promise<any[]> {
+  const updatedEvents = await Promise.all(
+    events.map(async (event) => {
+      const classroom = await ctx.db
+        .query("classrooms")
+        .filter((q: any) => q.eq(q.field("_id"), event.classroom))
+        .collect();
+      return {
+        ...event,
+        classroomName: classroom[0]?.name, // Add classroom name to each event, safely access name
+      };
+    })
+  );
+  return updatedEvents;
+}
+
 export const getEvents = query({
   args: {},
   async handler(ctx, args) {
     const events = await ctx.db.query("event").collect();
-    const updatedEvents = await Promise.all(
-      events.map(async (event) => {
-        const classroom = await ctx.db
-          .query("classrooms")
-          .filter((q) => q.eq(q.field("_id"), event.classroom))
-          .collect();
-        return {
-          ...event,
-          classroomName: classroom[0].name, // Add classroom name to each event
-        };
-      })
-    );
+    const updatedEvents = addClassroomNamesToEvents(events, ctx);
+    return updatedEvents;
+  },
+});
+
+export const getFacultyEvents = query({
+  args: {
+    id: v.id("faculty"),
+  },
+  async handler(ctx, args) {
+    const events = await ctx.db
+      .query("event")
+      .filter((q) => q.eq(q.field("faculty"), args.id))
+      .collect();
+    const updatedEvents = addClassroomNamesToEvents(events, ctx);
     return updatedEvents;
   },
 });

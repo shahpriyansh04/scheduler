@@ -18,3 +18,16 @@ export const getFaculty = query({
     return faculty;
   },
 });
+
+export const getFacultyById = query({
+  args: {
+    id: v.id("faculty"),
+  },
+  async handler(ctx, args) {
+    const faculty = await ctx.db
+      .query("faculty")
+      .filter((q) => q.eq(q.field("_id"), args.id))
+      .collect();
+    return faculty;
+  },
+});

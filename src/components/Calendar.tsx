@@ -5,8 +5,15 @@ import { useState } from "react";
 import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Button } from "@/components/ui/button";
+import { Doc } from "../../convex/_generated/dataModel";
 
-export default function CalendarView({ events, defaultView }: any) {
+export default function CalendarView({
+  events,
+  defaultView,
+}: {
+  events: Doc<"event">[];
+  defaultView: string;
+}) {
   const localizer = momentLocalizer(moment);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentView, setCurrentView] = useState(Views[defaultView]);
@@ -119,6 +126,7 @@ export default function CalendarView({ events, defaultView }: any) {
       onView={handleViewChange}
       step={30}
       views={views}
+      className="w-full px-12"
       view={currentView}
       onSelectEvent={(event: any) => {}}
       eventPropGetter={eventStyleGetter}
