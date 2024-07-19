@@ -41,8 +41,8 @@ export function ComboboxDemo({ data, setSelected }: any) {
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." />
-          <CommandEmpty>No framework found.</CommandEmpty>
+          <CommandInput placeholder="Search" />
+          <CommandEmpty>Not found.</CommandEmpty>
           <CommandList>
             {data?.map((item: any) => (
               <CommandItem

@@ -66,3 +66,17 @@ export const getFacultyEvents = query({
     return updatedEvents;
   },
 });
+
+export const getClassroomEvents = query({
+  args: {
+    id: v.id("classrooms"),
+  },
+  async handler(ctx, args) {
+    const events = await ctx.db
+      .query("event")
+      .filter((q) => q.eq(q.field("classroom"), args.id))
+      .collect();
+    const updatedEvents = addClassroomNamesToEvents(events, ctx);
+    return updatedEvents;
+  },
+});

@@ -52,9 +52,11 @@ export default function PageComponent() {
                   <p className="text-muted-foreground text-sm">
                     Search for a classroom's schedule.
                   </p>
-                  <Button size="sm" className="mt-4">
-                    Search
-                  </Button>
+                  <Link href="/classroom-schedule">
+                    <Button size="sm" className="mt-4">
+                      Search
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             </div>
