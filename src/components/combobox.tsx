@@ -35,7 +35,7 @@ export function ComboboxDemo({ data, setSelected }: any) {
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {selectedItem ? selectedItem.name : "Select framework..."}
+          {selectedItem ? selectedItem.name : "Select"}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -47,9 +47,8 @@ export function ComboboxDemo({ data, setSelected }: any) {
             {data?.map((item: any) => (
               <CommandItem
                 key={item._id}
-                value={item.name} // Keep this as name for display purposes
+                value={item.name}
                 onSelect={() => {
-                  // Set the selectedId to the item's id
                   setSelectedId(item._id === selectedId ? "" : item._id);
                   setSelected(item._id);
                   setOpen(false);

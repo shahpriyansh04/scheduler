@@ -1,19 +1,17 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { ConvexClient } from "convex/browser";
-import { api } from "../../convex/_generated/api";
 import { client } from "@/lib/client";
-import SubmitButton from "./SubmitButton";
-import { Card, CardContent } from "./ui/card";
 import { UserIcon } from "lucide-react";
+import { api } from "../../convex/_generated/api";
+import SubmitButton from "./SubmitButton";
+import { Button } from "./ui/button";
+import { Card, CardContent } from "./ui/card";
+import { Input } from "./ui/input";
 
 export default async function FacultyModal() {
   return (

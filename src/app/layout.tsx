@@ -1,9 +1,8 @@
 "use client";
-import type { Metadata } from "next";
+import Navbar from "@/components/Navbar";
+import { ConvexProvider, ConvexReactClient } from "convex/react";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ConvexProvider, ConvexReactClient } from "convex/react";
-import Navbar from "@/components/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!);

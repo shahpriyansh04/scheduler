@@ -1,12 +1,11 @@
 "use client";
-import { client } from "@/lib/client";
-import React, { useState } from "react";
-import { api } from "../../../convex/_generated/api";
 import { ComboboxDemo } from "@/components/combobox";
-import { Id } from "../../../convex/_generated/dataModel";
-import { useQuery } from "convex/react";
 import { Button } from "@/components/ui/button";
+import { useQuery } from "convex/react";
 import Link from "next/link";
+import { useState } from "react";
+import { api } from "../../../convex/_generated/api";
+import { Id } from "../../../convex/_generated/dataModel";
 
 export default function page() {
   const facultyMembers = useQuery(api.faculty.getFaculty, {});

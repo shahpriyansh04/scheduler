@@ -1,8 +1,3 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/or9FwvrgA1S
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
 import ClassAddDrawer from "@/components/ClassAddDrawer";
 import ClassroomModal from "@/components/ClassroomModal";
 import FacultyModal from "@/components/FacultyModal";
