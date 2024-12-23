@@ -6,6 +6,7 @@ import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Button } from "@/components/ui/button";
 import { Doc } from "../../convex/_generated/dataModel";
+import ClassSelectDrawer from "./ClassSelectDrawer";
 
 export default function CalendarView({
   events,
@@ -17,7 +18,10 @@ export default function CalendarView({
   const localizer = momentLocalizer(moment);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentView, setCurrentView] = useState(Views[defaultView]);
-
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<
+    Doc<"event"> | undefined
+  >();
   const views = ["week", "day"];
 
   const handleDateChange = (date: Date) => setCurrentDate(date);
@@ -112,34 +116,46 @@ export default function CalendarView({
     return { ...event, startDate, endDate };
   });
 
+  console.log(selectedEvent);
+
   return (
-    <Calendar
-      date={currentDate}
-      defaultDate={new Date()}
-      defaultView={defaultView}
-      startAccessor="startDate"
-      endAccessor="endDate"
-      localizer={localizer}
-      onNavigate={handleDateChange}
-      events={formattedEvents}
-      showMultiDayTimes
-      onView={handleViewChange}
-      step={30}
-      views={views}
-      className="w-full px-12"
-      view={currentView}
-      onSelectEvent={(event: any) => {}}
-      eventPropGetter={eventStyleGetter}
-      style={{ height: 800 }}
-      formats={{
-        dayFormat: customDayFormat,
-      }}
-      components={{
-        toolbar: CustomToolbar,
-      }}
-      selectable
-      min={new Date(0, 0, 0, 8, 0)}
-      max={new Date(0, 0, 0, 18, 0)}
-    />
+    <>
+      <Calendar
+        date={currentDate}
+        defaultDate={new Date()}
+        defaultView={defaultView}
+        startAccessor="startDate"
+        endAccessor="endDate"
+        localizer={localizer}
+        onNavigate={handleDateChange}
+        events={formattedEvents}
+        showMultiDayTimes
+        onView={handleViewChange}
+        step={30}
+        views={views}
+        className="w-full px-12"
+        view={currentView}
+        onSelectEvent={(event: any) => {
+          setSelectedEvent(event);
+          setIsDrawerOpen(true);
+        }}
+        eventPropGetter={eventStyleGetter}
+        style={{ height: 800 }}
+        formats={{
+          dayFormat: customDayFormat,
+        }}
+        components={{
+          toolbar: CustomToolbar,
+        }}
+        selectable
+        min={new Date(0, 0, 0, 8, 0)}
+        max={new Date(0, 0, 0, 18, 0)}
+      />
+      <ClassSelectDrawer
+        isDrawerOpen={isDrawerOpen}
+        selectedEvent={selectedEvent as Doc<"event">}
+        setIsDrawerOpen={setIsDrawerOpen}
+      />
+    </>
   );
 }

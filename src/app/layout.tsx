@@ -22,7 +22,7 @@ export default function RootLayout({
             options={{ showSpinner: false }}
             shallowRouting
           />
-          {children}
+        {children}
         </ConvexProvider>
       </body>
     </html>

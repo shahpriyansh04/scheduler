@@ -80,3 +80,12 @@ export const getClassroomEvents = query({
     return updatedEvents;
   },
 });
+
+export const deleteEvent = mutation({
+  args: {
+    id: v.id("event"),
+  },
+  async handler(ctx, args) {
+    await ctx.db.delete(args.id);
+  },
+});
