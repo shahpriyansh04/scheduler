@@ -47,7 +47,7 @@ async function addClassroomNamesToEvents(
 export const getEvents = query({
   args: {},
   async handler(ctx, args) {
-    const events = await ctx.db.query("event").collect();
+    const events = await ctx.db.query("week").collect();
     const updatedEvents = addClassroomNamesToEvents(events, ctx);
     return updatedEvents;
   },
@@ -59,7 +59,7 @@ export const getFacultyEvents = query({
   },
   async handler(ctx, args) {
     const events = await ctx.db
-      .query("event")
+      .query("week")
       .filter((q) => q.eq(q.field("faculty"), args.id))
       .collect();
     const updatedEvents = addClassroomNamesToEvents(events, ctx);
@@ -73,7 +73,7 @@ export const getClassroomEvents = query({
   },
   async handler(ctx, args) {
     const events = await ctx.db
-      .query("event")
+      .query("week")
       .filter((q) => q.eq(q.field("classroom"), args.id))
       .collect();
     const updatedEvents = addClassroomNamesToEvents(events, ctx);

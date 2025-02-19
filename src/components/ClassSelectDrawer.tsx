@@ -12,7 +12,6 @@ import {
   DrawerClose,
   DrawerContent,
   DrawerFooter,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,7 +25,6 @@ import {
 import { client } from "@/lib/client";
 import revalidate from "@/lib/revalidate-path";
 import { useMutation, useQuery } from "convex/react";
-import { BookIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api } from "../../convex/_generated/api";
 import { Doc, Id } from "../../convex/_generated/dataModel";
@@ -45,17 +43,29 @@ export default function ClassSelectDrawer({
   const faculty = useQuery(api.faculty.getFaculty, {});
   const createEvent = useMutation(api.event.createEvent);
   const deleteEvent = useMutation(api.event.deleteEvent);
-  const [start, setStart] = useState(selectedEvent?.start);
-  const [end, setEnd] = useState(selectedEvent?.end);
-  const [day, setDay] = useState(selectedEvent?.day);
-  const [type, setType] = useState(selectedEvent?.type);
+  const [start, setStart] = useState<string>(selectedEvent?.start || "");
+  const [end, setEnd] = useState<string>(selectedEvent?.end || "");
+  const [day, setDay] = useState<string>(selectedEvent?.day || "");
+  const [type, setType] = useState<string | undefined>(selectedEvent?.type);
   const [classrooms, setClassrooms] = useState<Doc<"classrooms">[]>();
-  const [selectedClassroom, setSelectedClassroom] =
-    useState<Id<"classrooms">>();
-  const [name, setName] = useState<string>(selectedEvent?.name);
+  const [selectedClassroom, setSelectedClassroom] = useState<
+    Id<"classrooms"> | undefined
+  >(selectedEvent?.classroom);
+  const [name, setName] = useState<string | undefined>(selectedEvent?.name);
   const [facultyId, setFacultyId] = useState<Id<"faculty"> | undefined>(
     selectedEvent?.faculty
   );
+
+  useEffect(() => {
+    if (selectedEvent) {
+      setStart(selectedEvent.start);
+      setEnd(selectedEvent.end);
+      setDay(selectedEvent.day);
+      setType(selectedEvent.type);
+      setName(selectedEvent.name);
+      setFacultyId(selectedEvent.faculty);
+    }
+  }, [selectedEvent]);
 
   const handleSubmit = async () => {
     const id = await createEvent({
@@ -122,7 +132,7 @@ export default function ClassSelectDrawer({
                 <Input
                   id="name"
                   placeholder="Enter class name"
-                  value={selectedEvent?.name}
+                  value={name}
                   disabled
                   onChange={(e) => setName(e.target.value)}
                 />
@@ -130,7 +140,7 @@ export default function ClassSelectDrawer({
               <div className="grid gap-2">
                 <Label htmlFor="faculty">Faculty</Label>
                 <Select
-                  value={selectedEvent?.faculty}
+                  value={facultyId}
                   disabled
                   onValueChange={(value: Id<"faculty">) => setFacultyId(value)}
                 >
@@ -148,11 +158,8 @@ export default function ClassSelectDrawer({
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="faculty">Day</Label>
-                  <Select
-                    value={selectedEvent?.day}
-                    onValueChange={(value) => setDay(value)}
-                  >
+                  <Label htmlFor="day">Day</Label>
+                  <Select value={day} onValueChange={(value) => setDay(value)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select day" />
                     </SelectTrigger>
@@ -167,9 +174,9 @@ export default function ClassSelectDrawer({
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="faculty">Type</Label>
+                  <Label htmlFor="type">Type</Label>
                   <Select
-                    value={selectedEvent?.type}
+                    value={type}
                     disabled
                     onValueChange={(value) => setType(value)}
                   >
@@ -189,7 +196,6 @@ export default function ClassSelectDrawer({
                   <Input
                     id="start-time"
                     type="time"
-                    defaultValue={selectedEvent?.start}
                     value={start}
                     onChange={(e) => setStart(e.target.value)}
                   />
@@ -199,7 +205,6 @@ export default function ClassSelectDrawer({
                   <Input
                     id="end-time"
                     type="time"
-                    defaultValue={selectedEvent?.end}
                     value={end}
                     onChange={(e) => setEnd(e.target.value)}
                   />

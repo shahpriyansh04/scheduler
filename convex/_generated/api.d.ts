@@ -17,6 +17,7 @@ import type {
 import type * as classroom from "../classroom.js";
 import type * as event from "../event.js";
 import type * as faculty from "../faculty.js";
+import type * as week from "../week.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -30,6 +31,7 @@ declare const fullApi: ApiFromModules<{
   classroom: typeof classroom;
   event: typeof event;
   faculty: typeof faculty;
+  week: typeof week;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

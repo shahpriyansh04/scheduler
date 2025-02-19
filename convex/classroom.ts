@@ -29,7 +29,7 @@ export const getAvailableClassrooms = query({
       .filter((q) => q.eq(q.field("type"), args.type))
       .collect();
 
-    const events = await ctx.db.query("event").collect();
+    const events = await ctx.db.query("week").collect();
     const availableClassrooms: Doc<"classrooms">[] = [];
     for (const classroom of classrooms) {
       let isAvailable = true;

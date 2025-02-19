@@ -1,6 +1,8 @@
 import ClassAddDrawer from "@/components/ClassAddDrawer";
 import ClassroomModal from "@/components/ClassroomModal";
+import EventAddDrawer from "@/components/EventAddDrawer";
 import FacultyModal from "@/components/FacultyModal";
+import FetchButton from "@/components/FetchButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CircleUserIcon, PencilIcon } from "lucide-react";
@@ -17,6 +19,7 @@ export default function PageComponent() {
               <ClassroomModal />
               <FacultyModal />
               <ClassAddDrawer />
+              <EventAddDrawer />
             </div>
           </div>
           <div>
@@ -52,6 +55,7 @@ export default function PageComponent() {
                       Search
                     </Button>
                   </Link>
+                  <FetchButton />
                 </CardContent>
               </Card>
             </div>
