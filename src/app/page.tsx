@@ -55,7 +55,22 @@ export default function PageComponent() {
                       Search
                     </Button>
                   </Link>
-                  <FetchButton />
+                  {/* <FetchButton /> */}
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="flex flex-col items-center justify-center p-6">
+                  <PencilIcon className="w-10 h-10 mb-2" />
+                  <h3 className="text-lg font-semibold mb-1">Check vacancy</h3>
+                  <p className="text-muted-foreground text-sm">
+                    Check for vacancies in the department
+                  </p>
+                  <Link href="/vacancy">
+                    <Button size="sm" className="mt-4">
+                      Search
+                    </Button>
+                  </Link>
+                  {/* <FetchButton /> */}
                 </CardContent>
               </Card>
             </div>
